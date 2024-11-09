@@ -1,16 +1,20 @@
-import { Stack, useNavigation } from 'expo-router';
+// LinkWalletScreen.js
+import { BarCodeScanner } from 'expo-barcode-scanner';
+import { Camera } from 'expo-camera';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
   Alert,
+  Button,
   Image,
+  ScrollView,
+  StyleSheet,
+  Text,
   TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
 
 const walletTypes = [
   {
@@ -41,8 +45,12 @@ const walletTypes = [
 ];
 
 export default function Component() {
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState(null);
   const [walletAddress, setWalletAddress] = useState('');
+
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
 
   const navigation = useNavigation();
 
@@ -50,7 +58,13 @@ export default function Component() {
     navigation.setOptions({
       title: 'Link Crypto Wallet',
     });
-  }, [navigation]);
+
+    if (isCameraOpen) {
+      navigation.setOptions({
+        headerShown: false,
+      });
+    }
+  }, [navigation, isCameraOpen]);
 
   const handleWalletSelection = (wallet) => {
     setSelectedWallet(wallet);
@@ -68,7 +82,57 @@ export default function Component() {
     }
   };
 
-  return (
+  // Request camera permissions
+  useEffect(() => {
+    const getPermissions = async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
+    };
+    getPermissions();
+  }, []);
+
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+    setWalletAddress(data); // Set the wallet address from the QR code data
+  };
+
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission...</Text>;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
+  return isCameraOpen ? (
+    <View style={cameraStyle.container}>
+      <Text style={cameraStyle.title}>Scanned Crypto Wallet Address</Text>
+
+      {scanned ? (
+        <View style={cameraStyle.resultContainer}>
+          <Text style={cameraStyle.resultText}>Wallet Address:</Text>
+          <Text style={cameraStyle.walletAddress}>{walletAddress}</Text>
+          <Button title="Scan Again" onPress={() => setScanned(false)} />
+        </View>
+      ) : (
+        <BarCodeScanner
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={StyleSheet.absoluteFillObject}
+        />
+      )}
+
+      {scanned && (
+        <TouchableOpacity
+          style={cameraStyle.button}
+          onPress={() => {
+            setScanned(false);
+            setIsCameraOpen(false);
+          }}
+        >
+          <Text style={cameraStyle.buttonText}>Continue</Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  ) : (
     <View style={styles.container}>
       <Text style={styles.title}>Link Your Crypto Wallet</Text>
       <ScrollView style={styles.walletList}>
@@ -112,6 +176,7 @@ export default function Component() {
             size={24}
             color="#9CA3AF"
             style={styles.inputIcon}
+            onPress={() => setIsCameraOpen(true)}
           />
         </View>
       </ScrollView>
@@ -206,5 +271,45 @@ const styles = StyleSheet.create({
   },
   inputIcon: {
     padding: 10,
+  },
+});
+
+const cameraStyle = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  resultContainer: {
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  resultText: {
+    fontSize: 18,
+  },
+  walletAddress: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginVertical: 10,
+    textAlign: 'center',
+  },
+  button: {
+    backgroundColor: '#6200ee',
+    padding: 15,
+    borderRadius: 10,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

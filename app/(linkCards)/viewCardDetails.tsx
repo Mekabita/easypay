@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Button, ScrollView } from 'react-native';
 import { getCards, getCardDetails } from '../db';
 import { useRouter } from 'expo-router';
+import { AppConstants } from '@/constants/AppConstants';
 
 export default function ViewCard() {
   const [cardDetails, setCardDetails] = useState([]);
@@ -20,7 +21,9 @@ export default function ViewCard() {
   if (!cardDetails.length) {
     return (
       <View style={styles.container}>
-        <Text style={styles.noCardText}>No card details found for this user.</Text>
+        <Text style={styles.noCardText}>
+          No card details found for this user.
+        </Text>
       </View>
     );
   }

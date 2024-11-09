@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
-import { View, Button, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import {
+  View,
+  Button,
+  Text,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+} from 'react-native';
 import { CreditCardInput } from 'react-native-credit-card-input';
 import { saveCardDetails } from '../db';
 import { useRouter } from 'expo-router';
+import { AppConstants } from '@/constants/AppConstants';
 
 export default function AddCardDetails() {
   const [cardInfo, setCardInfo] = useState(null);
@@ -11,16 +21,25 @@ export default function AddCardDetails() {
   const router = useRouter();
 
   // Handle card details update
-    const handleCardDetails = (formData) => {
+  const handleCardDetails = (formData) => {
     console.log('Status:', formData.status);
     setCardInfo(formData);
-    setIsCardValid(formData.status.number === "valid" && formData.status.expiry === "valid" && formData.status.cvc === "valid");
+    setIsCardValid(
+      formData.status.number === 'valid' &&
+        formData.status.expiry === 'valid' &&
+        formData.status.cvc === 'valid'
+    );
   };
 
   // Save card details if valid
   const handleSaveCardDetails = () => {
     if (isCardValid && cardInfo) {
-      saveCardDetails(userId, cardInfo.values.number, cardInfo.values.name, cardInfo.values.expiry);
+      saveCardDetails(
+        userId,
+        cardInfo.values.number,
+        cardInfo.values.name,
+        cardInfo.values.expiry
+      );
       Alert.alert('Success', 'Card details saved successfully!');
       router.push('/viewCardDetails'); // Navigate to card details view
     } else {
@@ -29,7 +48,10 @@ export default function AddCardDetails() {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <Text style={styles.heading}>Enter your credit card details</Text>
 
@@ -86,4 +108,3 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-

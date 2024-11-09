@@ -15,6 +15,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { createCryptoWalletTable, saveCryptoWalletDetails } from '../db';
+import { AppConstants } from '@/constants/AppConstants';
 
 const walletTypes = [
   {
@@ -55,6 +57,11 @@ export default function Component() {
   const navigation = useNavigation();
 
   useEffect(() => {
+    // Create the crypto wallet table if it doesn't exist
+    createCryptoWalletTable();
+  }, []);
+
+  useEffect(() => {
     navigation.setOptions({
       title: 'Link Crypto Wallet',
     });
@@ -63,6 +70,10 @@ export default function Component() {
       navigation.setOptions({
         headerShown: false,
       });
+    } else {
+      navigation.setOptions({
+        headerShown: true,
+      });
     }
   }, [navigation, isCameraOpen]);
 
@@ -70,13 +81,21 @@ export default function Component() {
     setSelectedWallet(wallet);
   };
 
-  const handleLinkWallet = () => {
+  const handleLinkWallet = async () => {
+    console.log('logging wallet address', walletAddress);
     if (selectedWallet) {
       // This is where you would implement the actual wallet linking logic
       Alert.alert(
         'Linking Wallet',
         `Initiating connection to ${selectedWallet.name}...`
       );
+
+      await saveCryptoWalletDetails({
+        userId: AppConstants.userId,
+        walletAddress,
+        walletName: selectedWallet.name,
+        currencyType: selectedWallet.symbol,
+      });
     } else {
       Alert.alert('Error', 'Please select a wallet first.');
     }

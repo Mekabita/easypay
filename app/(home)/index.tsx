@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import { Text, View, TouchableOpacity } from 'react-native';
 
 export default function Index() {
@@ -26,7 +26,7 @@ export default function Index() {
           elevation: 5,
           alignItems: 'center',
         }}
-        onPress={() => {}}
+        onPress={() => router.push('/(linkCrypto)')}
       >
         <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#333' }}>
           Link a Crypto Wallet
@@ -47,7 +47,7 @@ export default function Index() {
           elevation: 5,
           alignItems: 'center',
         }}
-        onPress={() => {}}
+        onPress={() => router.push('/(linkCards)')}
       >
         <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#333' }}>
           Link a Credit/Debit Card

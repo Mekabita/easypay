@@ -1,73 +1,89 @@
-import { useState } from 'react';
-import { Text, TextInput, Button, View } from 'react-native';
-import { saveCardDetails } from '../db'; // Import save function
+import React, { useState } from 'react';
+import { View, Button, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { CreditCardInput } from 'react-native-credit-card-input';
+import { saveCardDetails } from '../db';
 import { useRouter } from 'expo-router';
 
 export default function AddCardDetails() {
-  const [cardNumber, setCardNumber] = useState('');
-  const [cardHolderName, setCardHolderName] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
-
-  const userId = 'user-123'; // Replace with the actual userId from your auth system
+  const [cardInfo, setCardInfo] = useState(null);
+  const [isCardValid, setIsCardValid] = useState(false);
+  const userId = 'user-123'; // Replace with actual userId from auth system
   const router = useRouter();
 
+  // Handle card details update
+    const handleCardDetails = (formData) => {
+    console.log('Status:', formData.status);
+    setCardInfo(formData);
+    setIsCardValid(formData.status.number === "valid" && formData.status.expiry === "valid" && formData.status.cvc === "valid");
+  };
+
+  // Save card details if valid
   const handleSaveCardDetails = () => {
-    if (cardNumber && cardHolderName && expiryDate) {
-      saveCardDetails(userId, cardNumber, cardHolderName, expiryDate); // Save card details for this user
-      alert('Card details saved successfully!');
-      router.push('/viewCardDetails'); // Redirect to the card view page
+    if (isCardValid && cardInfo) {
+      saveCardDetails(userId, cardInfo.values.number, cardInfo.values.name, cardInfo.values.expiry);
+      Alert.alert('Success', 'Card details saved successfully!');
+      router.push('/viewCardDetails'); // Navigate to card details view
     } else {
-      alert('Please fill in all the details');
+      Alert.alert('Invalid Input', 'Please enter valid card details.');
     }
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-      <Text style={{ fontSize: 18, marginBottom: 20 }}>Enter your credit card details</Text>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <Text style={styles.heading}>Enter your credit card details</Text>
 
-      <TextInput
-        style={{
-          width: '80%',
-          padding: 10,
-          borderWidth: 1,
-          borderColor: '#ccc',
-          borderRadius: 5,
-          marginBottom: 20,
-        }}
-        placeholder="Card Number"
-        value={cardNumber}
-        onChangeText={setCardNumber}
-      />
+        {/* Credit Card Input Form */}
+        <CreditCardInput
+          autoFocus
+          requiresName
+          requiresCVC
+          requiresPostalCode
+          labelStyle={styles.labelStyle}
+          inputStyle={styles.inputStyle}
+          onChange={handleCardDetails}
+          validColor="black" // Color for valid inputs
+          invalidColor="red" // Color for invalid inputs
+          placeholderColor="darkgray"
+        />
 
-      <TextInput
-        style={{
-          width: '80%',
-          padding: 10,
-          borderWidth: 1,
-          borderColor: '#ccc',
-          borderRadius: 5,
-          marginBottom: 20,
-        }}
-        placeholder="Cardholder's Name"
-        value={cardHolderName}
-        onChangeText={setCardHolderName}
-      />
-
-      <TextInput
-        style={{
-          width: '80%',
-          padding: 10,
-          borderWidth: 1,
-          borderColor: '#ccc',
-          borderRadius: 5,
-          marginBottom: 20,
-        }}
-        placeholder="Expiry Date (MM/YY)"
-        value={expiryDate}
-        onChangeText={setExpiryDate}
-      />
-
-      <Button title="Save Card Details" onPress={handleSaveCardDetails} />
-    </View>
+        {/* Submit Button */}
+        <Button
+          title="Save Card Details"
+          onPress={handleSaveCardDetails}
+          disabled={!isCardValid} // Disable if card is invalid
+          color="#007BFF"
+        />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f9fa',
+  },
+  scrollViewContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#333',
+  },
+  labelStyle: {
+    fontSize: 14,
+    color: '#333',
+  },
+  inputStyle: {
+    fontSize: 16,
+    color: '#333',
+    padding: 10,
+  },
+});
+

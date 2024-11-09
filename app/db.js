@@ -51,7 +51,7 @@ export const saveCardDetails = (
 export const getCardDetails = (userId, callback) => {
   db.transaction((tx) => {
     tx.executeSql(
-      "SELECT * FROM cardDetails WHERE userId = ? LIMIT 1;", // Fetch card for the given userId
+      "SELECT * FROM cardDetails WHERE userId = ? LIMIT 4;", // Fetch card for the given userId
       [userId],
       (_, { rows }) => {
         if (rows.length > 0) {
@@ -62,6 +62,61 @@ export const getCardDetails = (userId, callback) => {
       },
       (_, error) => {
         console.error("Error fetching card details: ", error);
+      }
+    );
+  });
+};
+
+// get all the cards details for the users
+export const getCards = (userId, callback) => {
+  db.transaction((tx) => {
+    tx.executeSql(
+      "SELECT * FROM cardDetails WHERE userId = ? LIMIT 4;", // Fetch up to 4 cards for the given userId
+      [userId],
+      (_, { rows }) => {
+        if (rows.length > 0) {
+          callback(rows._array); // Return the entire array of card records
+        } else {
+          callback(null); // No card details found for this user
+        }
+      },
+      (_, error) => {
+        console.error("Error fetching card details: ", error);
+      }
+    );
+  });
+};
+
+// get card detail by ID
+export const getCardDetailsById = (cardId, callback) => {
+  db.transaction((tx) => {
+    tx.executeSql(
+      "SELECT * FROM cardDetails WHERE id = ?;", // Fetch card by its unique cardId
+      [cardId],
+      (_, { rows }) => {
+        if (rows.length > 0) {
+          callback(rows._array[0]); // Return the specific card record
+        } else {
+          callback(null); // No card details found for this id
+        }
+      },
+      (_, error) => {
+        console.error("Error fetching card details by ID: ", error);
+      }
+    );
+  });
+};
+
+export const deleteCardById = (cardId, callback) => {
+  db.transaction((tx) => {
+    tx.executeSql(
+      "DELETE FROM cardDetails WHERE id = ?;",
+      [cardId],
+      (_, result) => {
+        callback(result);
+      },
+      (_, error) => {
+        console.error("Error deleting card: ", error);
       }
     );
   });

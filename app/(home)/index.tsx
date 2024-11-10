@@ -46,6 +46,7 @@ export default function Index() {
 
   useEffect(() => {
     navigate.setOptions({ headerShown: false });
+
   }, []);
 
   const openModal = () => {
@@ -135,6 +136,36 @@ export default function Index() {
     translateY.setValue(0); // reset translateY
   };
 
+
+  const onGestureEvent = Animated.event(
+    [{ nativeEvent: { translationY: translateY } }],
+    { useNativeDriver: true }
+  );
+
+  const onHandlerStateChange = ({ nativeEvent }) => {
+    if (nativeEvent.translationY > 100) {
+      // Threshold for swipe down
+      closeModal();
+    } else {
+      // Animate back to initial position if threshold isn't met
+      Animated.spring(translateY, {
+        toValue: 0,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
+  const handleCardPayPress = () => {
+    closeModal()
+    router.push(`/cardDetails/3`);
+  };
+
+    const handleCryptoPayPress = () => {
+    closeModal()
+    router.push(`/cryptoDetails/3`);
+  };
+
+
   return isLocked ? (
     <View
       style={{
@@ -149,9 +180,11 @@ export default function Index() {
       </Text>
     </View>
   ) : (
+
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
         <Header />
+
         <View
           style={{
             ...styles.container,
@@ -232,7 +265,7 @@ export default function Index() {
           <Text style={modal.sheetTitle}>Payment Methods</Text>
           <TouchableOpacity
             style={modal.option}
-            onPress={() => alert('Selected Credit Card')}
+            onPress={handleCryptoPayPress}
           >
             <Text style={modal.optionText}>Crypto Wallet</Text>
           </TouchableOpacity>
@@ -240,7 +273,10 @@ export default function Index() {
             style={modal.option}
             onPress={() => alert('Selected PayPal')}
           >
-            <Text style={modal.optionText}>Linked Cards</Text>
+            <TouchableOpacity onPress={handleCardPayPress}>
+      <Text style={modal.optionText}>Linked Cards</Text>
+    </TouchableOpacity>
+            {/* <Text style={modal.optionText}>Linked Cards</Text> */}
           </TouchableOpacity>
           {/* <TouchableOpacity
             style={modal.option}

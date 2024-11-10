@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Button, ScrollView } from 'react-native';
-import { getCards, getCardDetailsById } from '../../db';
+import { getCards, getCardDetailsById, deleteCardById } from '../../db';
 import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
 
 export default function ViewCard() {
@@ -10,6 +10,7 @@ export default function ViewCard() {
   const { id } = useLocalSearchParams(); // Retrieve the card ID from the route params
   const navigation = useNavigation();
 
+  // console.log(id)
   // Static transactions array for demonstration
   const transactions = [
     {
@@ -51,6 +52,12 @@ export default function ViewCard() {
     navigation.setOptions({
       title: 'Card Details',
     });
+
+    //       deleteCardById(5, (details) => {
+    //   if (details) {
+    //     setCardDetails(details);
+    //   }
+    // });
   }, [id]);
 
   if (!cardDetails) {

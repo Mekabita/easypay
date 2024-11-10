@@ -1,7 +1,8 @@
-import { useWalletInfo } from '@reown/appkit-wagmi-react-native';
+import { useRouter, useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useAccount, useBalance } from 'wagmi';
+import { useWalletInfo } from '@reown/appkit-wagmi-react-native';
 
 const API_KEY = process.env.EXPO_PUBLIC_COINMARKETCAP_API_KEY;
 
@@ -11,7 +12,33 @@ export default function CryptoAccountCard() {
   const { data: balanceData } = useBalance({ address });
   const [exchangeRate, setExchangeRate] = useState(null);
   const [fiatEquivalent, setFiatEquivalent] = useState('0.00');
+      const navigation = useNavigation();
 
+    const router = useRouter();
+    
+      // Static transactions array for demonstration
+  const transactions = [
+    {
+      id: 1,
+      date: '2024-11-01',
+      description: 'Bali Safari',
+      amount: '-THB32.50',
+    },
+    {
+      id: 2,
+      date: '2024-11-03',
+      description: 'Hotel Mariott',
+      amount: '-Rs120.00',
+    },
+    {
+      id: 3,
+      date: '2024-11-05',
+      description: 'Star Bucks',
+      amount: '-Rs5.75',
+    },
+    { id: 4, date: '2024-11-07', description: 'Patan Durbar Square', amount: '-Rs40.00' },
+  ];
+    
   useEffect(() => {
     const fetchFiatEquivalent = async () => {
       try {
@@ -25,8 +52,6 @@ export default function CryptoAccountCard() {
           }
         );
         const data = await response.json();
-
-        // console.log(response)
 
         // Find the cryptocurrency data by symbol
         const cryptoData = data.data.find(
@@ -53,7 +78,10 @@ export default function CryptoAccountCard() {
       }
     };
 
-    fetchFiatEquivalent();
+      fetchFiatEquivalent();
+          navigation.setOptions({
+      title: 'Crypto Pay',
+    });
   }, [balanceData?.symbol]);
 
   useEffect(() => {
@@ -65,7 +93,11 @@ export default function CryptoAccountCard() {
     }
   }, [exchangeRate, balanceData?.value]);
 
-  return address ? (
+
+  console.log(fiatEquivalent);
+
+  return (
+    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
     <View style={styles.cardContainer}>
       <Text style={styles.cardNumber} numberOfLines={1} ellipsizeMode="tail">
         {walletInfo?.name}
@@ -89,8 +121,19 @@ export default function CryptoAccountCard() {
         <Text style={styles.cardExpiry}>USD ${fiatEquivalent}</Text>
       </View>
     </View>
-  ) : (
-    <Text>Crypto account has not been linked</Text>
+                  <Text style={styles.transactionsHeading}>Transactions</Text>
+        {transactions.map((transaction) => (
+          <View key={transaction.id} style={styles.transactionContainer}>
+            <Text style={styles.transactionDate}>{transaction.date}</Text>
+            <Text style={styles.transactionDescription}>
+              {transaction.description}
+            </Text>
+            <Text style={styles.transactionAmount}>{transaction.amount}</Text>
+          </View>
+        ))}
+          
+      <Button title="Back to Home" onPress={() => router.replace('/(home)')} />
+    </ScrollView>
   );
 }
 
@@ -110,10 +153,10 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: '90%',
-    aspectRatio: 2,
+    aspectRatio: 1.6,
     backgroundColor: '#1e1e1e',
     borderRadius: 15,
-    padding: 18,
+    padding: 20,
     justifyContent: 'space-between',
     alignItems: 'center',
     shadowColor: '#000',
@@ -121,13 +164,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 10,
     elevation: 8,
+    marginBottom: 20,
   },
   cardNumber: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
     letterSpacing: 2,
-    marginTop: 20,
+    marginTop: 50,
     textAlign: 'center',
   },
   cardHolder: {
@@ -145,5 +189,40 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
+    },
+    transactionsHeading: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  transactionContainer: {
+    width: '100%',
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  transactionDate: {
+    fontSize: 14,
+    color: '#666',
+  },
+  transactionDescription: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    flex: 1,
+    marginLeft: 10,
+  },
+  transactionAmount: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#f00',
   },
 });

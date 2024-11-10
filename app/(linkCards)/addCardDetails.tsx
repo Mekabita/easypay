@@ -27,6 +27,8 @@ export default function AddCardDetails() {
     navigation.setOptions({
       title: 'Add Card Details',
     });
+        
+        
   }, []);
 
   // Handle card details update
@@ -50,7 +52,7 @@ export default function AddCardDetails() {
         cardInfo.values.expiry
       );
       Alert.alert('Success', 'Card details saved successfully!');
-      router.push('/viewCardDetails'); // Navigate to card details view
+      router.push('/Cards'); // Navigate to card details view
     } else {
       Alert.alert('Invalid Input', 'Please enter valid card details.');
     }
@@ -62,7 +64,7 @@ export default function AddCardDetails() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        <Text style={styles.heading}>Enter your credit card details</Text>
+        <Text style={styles.heading}>Enter your card details</Text>
 
         {/* Credit Card Input Form */}
         <CreditCardInput

@@ -56,7 +56,7 @@ export default function RootLayout() {
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <Stack>
-          <Stack.Screen name="(home)/index" options={{ title: 'Easy Pay' }} />
+          <Stack.Screen name="(home)/index" options={{ title: 'Nexus Pay' }} />
         </Stack>
         <AppKit />
       </QueryClientProvider>

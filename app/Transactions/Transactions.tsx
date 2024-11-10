@@ -24,7 +24,7 @@ const transactions = [
     amount: '$120.00',
     date: '2023-11-03',
     status: 'BRL 688.54',
-    txnType: 'card',
+    txnType: 'AMEX',
   },
   // Add more transactions as needed
 ];
@@ -48,7 +48,7 @@ export default function TransactionList() {
                   textTransform: 'capitalize',
                 }}
               >
-                Used {item?.txnType}
+                {item?.txnType}
               </Text>
               <Text style={styles.date}>{item.date}</Text>
             </View>

@@ -1,10 +1,13 @@
 import { AppConstants } from '@/constants/AppConstants';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { getCards } from '../db';
+import { useRouter } from 'expo-router';
 
 export default function ViewCard() {
   const [cardDetails, setCardDetails] = useState([]);
+  const router = useRouter();
+
 
   useEffect(() => {
     // Fetch all card details for the current user
@@ -13,15 +16,24 @@ export default function ViewCard() {
         setCardDetails(details);
       }
     });
+
   }, []);
+
+  const handleCardPress = (card) => {
+    router.push(`/cardDetails/${card.id}`);
+  };
 
   return cardDetails.map((card, index) => (
     <View key={index} style={styles.cardContainer}>
-      <Text style={styles.cardNumber} numberOfLines={1} ellipsizeMode="tail">
-        {card.cardNumber}
-      </Text>
-      <Text style={styles.cardHolder}>{card.cardHolderName}</Text>
-      <Text style={styles.cardExpiry}>Expiry: {card.expiryDate}</Text>
+      <TouchableOpacity
+              key={index}
+              style={styles.cardContainer}
+              onPress={() => handleCardPress(card)}
+            >
+              <Text style={styles.cardNumber}>{card.cardNumber}</Text>
+              <Text style={styles.cardHolder}>{card.cardHolderName}</Text>
+              <Text style={styles.cardExpiry}>Expiry: {card.expiryDate}</Text>
+      </TouchableOpacity>
     </View>
   ));
 }

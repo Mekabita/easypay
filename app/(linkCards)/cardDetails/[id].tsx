@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Button, ScrollView } from 'react-native';
 import { getCards, getCardDetailsById } from '../../db';
-import { useRouter, useLocalSearchParams} from 'expo-router';
+import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
+
 
 export default function ViewCard() {
   const [cardDetails, setCardDetails] = useState([]);
   const userId = 'user-123';
   const router = useRouter();
   const { id } = useLocalSearchParams(); // Retrieve the card ID from the route params
-
+    const navigation = useNavigation();
 
   // Static transactions array for demonstration
   const transactions = [
@@ -24,6 +25,9 @@ export default function ViewCard() {
       if (details) {
         setCardDetails(details);
       }
+    });
+    navigation.setOptions({
+      title: 'Card Details',
     });
   }, [id]);
 
@@ -54,7 +58,7 @@ export default function ViewCard() {
         </View>
       ))}
 
-      <Button title="Back to Home" onPress={() => router.push('/')} />
+      <Button title="Back to Home" onPress={() => router.push('/(home)')} />
     </View>
     </ScrollView>
 

@@ -6,6 +6,13 @@ import { getCards } from '../db';
 export default function ViewCard() {
   const [cardDetails, setCardDetails] = useState([]);
 
+  const maskCardNumber = (cardNumber) => {
+    // Show only the last 4 digits
+    const lastFourDigits = cardNumber.slice(-4);
+    const maskedSection = cardNumber.slice(0, -4).replace(/\d/g, '*');
+    return maskedSection + lastFourDigits;
+  };
+
   useEffect(() => {
     // Fetch all card details for the current user
     getCards(AppConstants.userId, (details) => {
@@ -13,12 +20,16 @@ export default function ViewCard() {
         setCardDetails(details);
       }
     });
-  }, []);
+  }, [setCardDetails]);
+
+  if (!cardDetails.length) {
+    return <Text>No card details found for this user.</Text>;
+  }
 
   return cardDetails.map((card, index) => (
     <View key={index} style={styles.cardContainer}>
       <Text style={styles.cardNumber} numberOfLines={1} ellipsizeMode="tail">
-        {card.cardNumber}
+        {maskCardNumber(card.cardNumber)}
       </Text>
       <Text style={styles.cardHolder}>{card.cardHolderName}</Text>
       <Text style={styles.cardExpiry}>Expiry: {card.expiryDate}</Text>

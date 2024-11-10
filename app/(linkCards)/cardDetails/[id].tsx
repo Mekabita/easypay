@@ -34,6 +34,7 @@ export default function ViewCard() {
   ];
 
   const maskCardNumber = (cardNumber) => {
+    if (!cardNumber) return '';
     // Show only the last 4 digits
     const lastFourDigits = cardNumber.slice(-4);
     const maskedSection = cardNumber.slice(0, -4).replace(/\d/g, '*');
@@ -65,7 +66,7 @@ export default function ViewCard() {
       <View style={styles.container}>
         <View style={styles.cardContainer}>
           <Text style={styles.cardNumber}>
-            {maskCardNumber(cardDetails.cardNumber)}
+            {cardDetails.cardNumber ? maskCardNumber(cardDetails.cardNumber) : 'Loading...'}
           </Text>
           <Text style={styles.cardHolder}>{cardDetails.cardHolderName}</Text>
           <Text style={styles.cardExpiry}>

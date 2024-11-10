@@ -1,10 +1,12 @@
+import { useWalletInfo } from '@reown/appkit-wagmi-react-native';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useAccount, useBalance } from 'wagmi';
 
-const API_KEY = process.env.YOUR_COINMARKETCAP_API_KEY;
+const API_KEY = process.env.EXPO_PUBLIC_COINMARKETCAP_API_KEY;
 
 export default function CryptoAccountCard() {
+  const { walletInfo } = useWalletInfo();
   const { address } = useAccount();
   const { data: balanceData } = useBalance({ address });
   const [exchangeRate, setExchangeRate] = useState(null);
@@ -64,7 +66,7 @@ export default function CryptoAccountCard() {
   return address ? (
     <View style={styles.cardContainer}>
       <Text style={styles.cardNumber} numberOfLines={1} ellipsizeMode="tail">
-        {address}
+        {walletInfo?.name}
       </Text>
       <Text style={{ color: 'white' }}>
         1 {balanceData?.symbol} = {exchangeRate}

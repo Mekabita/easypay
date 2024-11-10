@@ -26,7 +26,7 @@ export default function Header() {
         </Text>
       </View>
       <Image
-        source={{ uri: 'https://image.pngaaa.com/200/326200-middle.png' }}
+        source={{ uri: 'https://www.pngall.com/wp-content/uploads/5/Profile-Avatar-PNG-Clipart.png' }}
         style={styles.profileIcon}
       />
     </View>
@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
     borderRadius: 20, // Makes the logo circular
   },
   profileIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20, // Makes the icon circular
+    width: 30,
+    height: 30,
+    borderRadius: 10, // Makes the icon circular
   },
 });

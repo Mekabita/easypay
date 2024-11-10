@@ -53,7 +53,7 @@ export default function ViewCard() {
       title: 'Card Details',
     });
 
-    //       deleteCardById(5, (details) => {
+    //       deleteCardById(4, (details) => {
     //   if (details) {
     //     setCardDetails(details);
     //   }

@@ -8,7 +8,7 @@ const API_KEY = process.env.EXPO_PUBLIC_COINMARKETCAP_API_KEY;
 export default function CryptoAccountCard() {
   const { address } = useAccount();
   const { data: balanceData } = useBalance({ address });
-  const [exchangeRate, setExchangeRate] = useState(null);
+  const [exchangeRate, setExchangeRate] = useState(3229.57);
   const [fiatEquivalent, setFiatEquivalent] = useState('0.00');
 
   const router = useRouter();
@@ -35,7 +35,7 @@ export default function CryptoAccountCard() {
         );
 
         if (cryptoData) {
-          const priceUsd = cryptoData.quote.USD.price;
+          const priceUsd = cryptoData.quote.USD.price || 3229.57;
           setExchangeRate(priceUsd?.toFixed(2));
           const fiatValue = (parseFloat(balanceData?.value) * priceUsd).toFixed(
             2

@@ -9,7 +9,7 @@ export default function CryptoAccountCard() {
   const { walletInfo } = useWalletInfo();
   const { address } = useAccount();
   const { data: balanceData } = useBalance({ address });
-  const [exchangeRate, setExchangeRate] = useState(null);
+  const [exchangeRate, setExchangeRate] = useState(3229.57);
   const [fiatEquivalent, setFiatEquivalent] = useState('0.00');
 
   useEffect(() => {
@@ -26,7 +26,6 @@ export default function CryptoAccountCard() {
         );
         const data = await response.json();
 
-        // console.log(response)
 
         // Find the cryptocurrency data by symbol
         const cryptoData = data.data.find(
@@ -35,8 +34,8 @@ export default function CryptoAccountCard() {
         );
 
         if (cryptoData) {
-          const priceUsd = cryptoData.quote.USD.price;
-          setExchangeRate(priceUsd?.toFixed(2));
+          const priceUsd = cryptoData.quote.USD.price || 3229.57;
+          setExchangeRate(priceUsd?.toFixed(2)|| 3229.57);
           const fiatValue = (parseFloat(balanceData?.value) * priceUsd).toFixed(
             2
           );

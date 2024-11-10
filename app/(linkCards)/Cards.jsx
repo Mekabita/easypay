@@ -36,7 +36,7 @@ export default function ViewCard() {
         onPress={() => handleCardPress(card)}
       >
         <Text style={styles.cardNumber}>{maskCardNumber(card.cardNumber)}</Text>
-        <Text style={styles.cardHolder}>{card.cardHolderName}</Text>
+        <Text style={styles.cardHolder}>{index === 1 ? 'VISA' : 'Mastercard'}</Text>
         <Text style={styles.cardExpiry}>Expiry: {card.expiryDate}</Text>
       </TouchableOpacity>
     </View>

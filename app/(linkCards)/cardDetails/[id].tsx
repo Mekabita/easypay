@@ -65,7 +65,7 @@ export default function ViewCard() {
       <View style={styles.container}>
         <View style={styles.cardContainer}>
           <Text style={styles.cardNumber}>
-            {maskCardNumber(cardDetails.cardNumber)}
+            {cardDetails.cardNumber ? maskCardNumber(cardDetails.cardNumber) : 'Loading...'}
           </Text>
           <Text style={styles.cardHolder}>{cardDetails.cardHolderName}</Text>
           <Text style={styles.cardExpiry}>

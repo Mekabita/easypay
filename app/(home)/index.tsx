@@ -106,7 +106,6 @@ export default function Index() {
         console.log('Authentication Successful', 'You are authenticated!');
         await AsyncStorage.setItem('@isAuthenticated', 'true');
       } else if (result.error === 'user_cancel') {
-        console.log('here');
         handleCancel();
       } else {
         console.log('Authentication Failed', 'Please try again!');
@@ -285,7 +284,6 @@ export default function Index() {
           </TouchableOpacity>
           <TouchableOpacity
             style={modal.option}
-            onPress={() => alert('Selected PayPal')}
           >
             <TouchableOpacity onPress={handleCardPayPress}>
               <Text style={modal.optionText}>Linked Cards</Text>

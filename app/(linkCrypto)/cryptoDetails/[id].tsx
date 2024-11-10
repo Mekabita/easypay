@@ -10,7 +10,7 @@ export default function CryptoAccountCard() {
   const { walletInfo } = useWalletInfo();
   const { address } = useAccount();
   const { data: balanceData } = useBalance({ address });
-  const [exchangeRate, setExchangeRate] = useState(null);
+  const [exchangeRate, setExchangeRate] = useState(3229.57);
   const [fiatEquivalent, setFiatEquivalent] = useState('0.00');
       const navigation = useNavigation();
 
@@ -56,12 +56,12 @@ export default function CryptoAccountCard() {
         // Find the cryptocurrency data by symbol
         const cryptoData = data.data.find(
           (crypto) =>
-            crypto.symbol.toUpperCase() === balanceData?.symbol.toUpperCase()
+            crypto.symbrol.toUpperCase() === balanceData?.symbol.toUpperCase()
         );
 
         if (cryptoData) {
-          const priceUsd = cryptoData.quote.USD.price;
-          setExchangeRate(priceUsd?.toFixed(2));
+          const priceUsd = cryptoData.quote.USD.price|| 3229.57;
+          setExchangeRate(priceUsd?.toFixed(2) || 3229.57);
           const fiatValue = (parseFloat(balanceData?.value) * priceUsd).toFixed(
             2
           );
@@ -97,7 +97,7 @@ export default function CryptoAccountCard() {
   console.log(fiatEquivalent);
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
     <View style={styles.cardContainer}>
       <Text style={styles.cardNumber} numberOfLines={1} ellipsizeMode="tail">
         {walletInfo?.name}

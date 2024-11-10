@@ -17,7 +17,6 @@ import { AppConstants } from '@/constants/AppConstants';
 export default function AddCardDetails() {
   const [cardInfo, setCardInfo] = useState(null);
   const [isCardValid, setIsCardValid] = useState(false);
-  const userId = 'user-123'; // Replace with actual userId from auth system
   const router = useRouter();
 
   // Handle card details update
@@ -35,7 +34,7 @@ export default function AddCardDetails() {
   const handleSaveCardDetails = () => {
     if (isCardValid && cardInfo) {
       saveCardDetails(
-        userId,
+        AppConstants.userId,
         cardInfo.values.number,
         cardInfo.values.name,
         cardInfo.values.expiry

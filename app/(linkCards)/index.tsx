@@ -9,10 +9,10 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getCards, createTable, deleteCardById } from '../db';
+import { AppConstants } from '@/constants/AppConstants';
 
 export default function Index() {
   const [cardDetails, setCardDetails] = useState([]);
-  const userId = 'user-123'; // Replace with the actual userId from your auth system
   const router = useRouter();
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function Index() {
     createTable();
 
     // Fetch all card details for the current user
-    getCards(userId, (details) => {
+    getCards(AppConstants.userId, (details) => {
       if (details && Array.isArray(details)) {
         setCardDetails(details);
       }

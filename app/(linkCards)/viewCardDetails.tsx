@@ -6,12 +6,11 @@ import { AppConstants } from '@/constants/AppConstants';
 
 export default function ViewCard() {
   const [cardDetails, setCardDetails] = useState([]);
-  const userId = 'user-123';
   const router = useRouter();
 
   useEffect(() => {
     // Fetch all card details for the current user
-    getCards(userId, (details) => {
+    getCards(AppConstants.userId, (details) => {
       if (details && Array.isArray(details)) {
         setCardDetails(details);
       }

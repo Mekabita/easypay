@@ -12,11 +12,14 @@ import {
   TouchableWithoutFeedback,
   Animated,
   SafeAreaView,
+  BackHandler,
+  Platform,
+  Alert,
 } from 'react-native';
 import Cards from '../(linkCards)/Cards';
 import CryptoCard from '../(linkCrypto)/CryptoCard';
 import Transactions from '../Transactions/Transactions';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import * as LocalAuthentication from 'expo-local-authentication';
 
 import { LogBox } from 'react-native';
 import Header from './Header';
@@ -34,6 +37,11 @@ export default function Index() {
   const navigate = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const translateY = new Animated.Value(0); // for tracking the swipe
+  const [isLocked, setIsLocked] = useState(false); // Track if user is locked out
+
+  const [hasBiometricHardware, setHasBiometricHardware] = useState(false);
+  const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+  const [biometricType, setBiometricType] = useState('');
 
   useEffect(() => {
     navigate.setOptions({ headerShown: false });
@@ -44,10 +52,81 @@ export default function Index() {
     setModalVisible(true);
   };
 
+  const handleCancel = () => {
+    if (Platform.OS === 'android') {
+      BackHandler.exitApp(); // Close app on Android
+    } else {
+      setIsLocked(true);
+      Alert.alert(
+        'Authentication Required',
+        'To continue using the app, please restart it and complete authentication.'
+      );
+    }
+  };
+
+  // Check if the device supports biometric authentication
+  useEffect(() => {
+    const checkBiometricSupport = async () => {
+      const compatible = await LocalAuthentication.hasHardwareAsync();
+      setHasBiometricHardware(compatible);
+
+      if (compatible) {
+        const types =
+          await LocalAuthentication.supportedAuthenticationTypesAsync();
+
+        if (types.length > 0) {
+          // Set the biometric type (Face ID or Fingerprint)
+          setBiometricType(
+            types.includes(
+              LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION
+            )
+              ? 'Face ID'
+              : 'Fingerprint'
+          );
+          setIsBiometricSupported(true);
+        } else {
+          setIsBiometricSupported(false);
+        }
+      }
+    };
+
+    checkBiometricSupport();
+  }, []);
+
+  // Function to handle biometric authentication
+  const authenticate = async () => {
+    try {
+      const result = await LocalAuthentication.authenticateAsync({
+        promptMessage: 'Authenticate with Face ID or Fingerprint',
+        fallbackLabel: 'Use PIN',
+      });
+
+      if (result.success) {
+        console.log('Authentication Successful', 'You are authenticated!');
+      } else if (result.error === 'user_cancel') {
+        console.log('here');
+        handleCancel();
+      } else {
+        console.log('Authentication Failed', 'Please try again!');
+      }
+    } catch (error) {
+      console.error('Authentication error', error);
+      console.log(
+        'Error',
+        'Something went wrong with the authentication process.'
+      );
+    }
+  };
+
+  useEffect(() => {
+    authenticate();
+  }, []);
+
   const closeModal = () => {
     setModalVisible(false);
     translateY.setValue(0); // reset translateY
   };
+
 
   const onGestureEvent = Animated.event(
     [{ nativeEvent: { translationY: translateY } }],
@@ -78,8 +157,21 @@ export default function Index() {
   };
 
 
+  return isLocked ? (
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Text>
+        To continue using the app, please restart it and complete
+        authentication.
+      </Text>
+    </View>
+  ) : (
 
-  return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
         <Header />

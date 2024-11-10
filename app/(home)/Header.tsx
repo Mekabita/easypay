@@ -11,7 +11,7 @@ export default function Header() {
         }}
       >
         <Image
-          source={{ uri: 'https://image.pngaaa.com/200/326200-middle.png' }}
+          source={require('../../assets/images/Logo_np-removebg-preview.png')}
           style={styles.logo}
         />
         <Text
@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', // Optional background color for header
   },
   logo: {
-    width: 40, // Adjust width as needed
-    height: 40, // Adjust height as needed
+    width: 80, // Adjust width as needed
+    height: 80, // Adjust height as needed
     resizeMode: 'contain', // Keeps the logo aspect ratio
     borderRadius: 20, // Makes the logo circular
   },

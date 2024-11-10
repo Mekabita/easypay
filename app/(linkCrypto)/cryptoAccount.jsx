@@ -26,6 +26,8 @@ export default function CryptoAccountCard() {
         );
         const data = await response.json();
 
+        console.log(data);
+
         // Find the cryptocurrency data by symbol
         const cryptoData = data.data.find(
           (crypto) =>

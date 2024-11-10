@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Button, ScrollView } from 'react-native';
-import { getCards, getCardDetails } from '../db';
-import { useRouter } from 'expo-router';
 import { AppConstants } from '@/constants/AppConstants';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { getCards } from '../db';
 
 export default function ViewCard() {
   const [cardDetails, setCardDetails] = useState([]);
-  const router = useRouter();
 
   useEffect(() => {
     // Fetch all card details for the current user
@@ -17,28 +15,15 @@ export default function ViewCard() {
     });
   }, []);
 
-  if (!cardDetails.length) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.noCardText}>
-          No card details found for this user.
-        </Text>
-      </View>
-    );
-  }
-
-  return (
-    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-      {cardDetails.map((card, index) => (
-        <View key={index} style={styles.cardContainer}>
-          <Text style={styles.cardNumber}>{card.cardNumber}</Text>
-          <Text style={styles.cardHolder}>{card.cardHolderName}</Text>
-          <Text style={styles.cardExpiry}>Expiry: {card.expiryDate}</Text>
-        </View>
-      ))}
-      <Button title="Back to Home" onPress={() => router.push('/')} />
-    </ScrollView>
-  );
+  return cardDetails.map((card, index) => (
+    <View key={index} style={styles.cardContainer}>
+      <Text style={styles.cardNumber} numberOfLines={1} ellipsizeMode="tail">
+        {card.cardNumber}
+      </Text>
+      <Text style={styles.cardHolder}>{card.cardHolderName}</Text>
+      <Text style={styles.cardExpiry}>Expiry: {card.expiryDate}</Text>
+    </View>
+  ));
 }
 
 const styles = StyleSheet.create({
@@ -49,15 +34,9 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f0f0f0',
   },
-  scrollViewContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
   cardContainer: {
     width: '90%',
-    aspectRatio: 1.6,
+    aspectRatio: 2,
     backgroundColor: '#1e1e1e',
     borderRadius: 15,
     padding: 20,
@@ -71,11 +50,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   cardNumber: {
-    fontSize: 24,
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#fff',
     letterSpacing: 2,
-    marginTop: 50,
+    marginTop: 25,
     textAlign: 'center',
   },
   cardHolder: {

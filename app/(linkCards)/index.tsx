@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Button, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { getCards, createTable, deleteCardById } from '../db';
+import { AppConstants } from '@/constants/AppConstants';
 
 export default function Index() {
   const [cardDetails, setCardDetails] = useState([]);
-  const userId = 'user-123'; // Replace with the actual userId from your auth system
   const router = useRouter();
 
   useEffect(() => {
@@ -13,7 +20,7 @@ export default function Index() {
     createTable();
 
     // Fetch all card details for the current user
-    getCards(userId, (details) => {
+    getCards(AppConstants.userId, (details) => {
       if (details && Array.isArray(details)) {
         setCardDetails(details);
       }
@@ -30,11 +37,9 @@ export default function Index() {
     router.push('/addCardDetails');
   };
 
-const handleCardPress = (card) => {
-  router.push(`/cardDetails/${card.id}`);
-};
-
-
+  const handleCardPress = (card) => {
+    router.push(`/cardDetails/${card.id}`);
+  };
 
   return (
     <View style={styles.container}>
@@ -42,7 +47,11 @@ const handleCardPress = (card) => {
       {cardDetails.length > 0 ? (
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>
           {cardDetails.map((card, index) => (
-            <TouchableOpacity key={index} style={styles.cardContainer} onPress={() => handleCardPress(card)}>
+            <TouchableOpacity
+              key={index}
+              style={styles.cardContainer}
+              onPress={() => handleCardPress(card)}
+            >
               <Text style={styles.cardNumber}>{card.cardNumber}</Text>
               <Text style={styles.cardHolder}>{card.cardHolderName}</Text>
               <Text style={styles.cardExpiry}>Expiry: {card.expiryDate}</Text>
@@ -50,7 +59,9 @@ const handleCardPress = (card) => {
           ))}
         </ScrollView>
       ) : (
-        <Text style={styles.noCardText}>No card details found for this user.</Text>
+        <Text style={styles.noCardText}>
+          No card details found for this user.
+        </Text>
       )}
 
       {/* Show "Add Card" button at the bottom */}

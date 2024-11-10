@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useAccount, useBalance } from 'wagmi';
 
-const API_KEY = process.env.YOUR_COINMARKETCAP_API_KEY;
+// const API_KEY = process.env.EXPO_PUBLIC_COINMARKETCAP_API_KEY;
+const API_KEY = 'a3207dd8-1b70-490a-8f8e-bc1f8e7be6bd';
 
 export default function CryptoAccountCard() {
   const { address } = useAccount();

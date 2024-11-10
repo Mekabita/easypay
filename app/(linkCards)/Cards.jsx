@@ -8,7 +8,7 @@ export default function ViewCard() {
   const [cardDetails, setCardDetails] = useState([]);
   const router = useRouter();
 
-  const maskCardNumber = (cardNumber) => {
+  const maskCardNumber = (cardNumber = '') => {
     // Show only the last 4 digits
     const lastFourDigits = cardNumber.slice(-4);
     const maskedSection = cardNumber.slice(0, -4).replace(/\d/g, '*');

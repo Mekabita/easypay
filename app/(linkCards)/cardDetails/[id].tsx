@@ -10,6 +10,7 @@ export default function ViewCard() {
   const { id } = useLocalSearchParams(); // Retrieve the card ID from the route params
   const navigation = useNavigation();
 
+  // console.log(id)
   // Static transactions array for demonstration
   const transactions = [
     {

@@ -64,6 +64,11 @@ export default function Index() {
     }
   };
 
+  const handleCardPress = () => {
+    closeModal()
+    router.push(`/cardDetails/3`);
+  };
+
   return (
     <>
       <ScrollView style={styles.container}>
@@ -151,7 +156,10 @@ export default function Index() {
             style={modal.option}
             onPress={() => alert('Selected PayPal')}
           >
-            <Text style={modal.optionText}>Linked Cards</Text>
+            <TouchableOpacity onPress={handleCardPress}>
+      <Text style={modal.optionText}>Linked Cards</Text>
+    </TouchableOpacity>
+            {/* <Text style={modal.optionText}>Linked Cards</Text> */}
           </TouchableOpacity>
           {/* <TouchableOpacity
             style={modal.option}

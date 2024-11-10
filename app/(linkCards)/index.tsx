@@ -7,13 +7,14 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useNavigation } from 'expo-router';
 import { getCards, createTable, deleteCardById } from '../db';
 import { AppConstants } from '@/constants/AppConstants';
 
 export default function Index() {
   const [cardDetails, setCardDetails] = useState([]);
   const router = useRouter();
+  const navigation = useNavigation();
 
   useEffect(() => {
     // Create the table if it doesn't exist
@@ -26,6 +27,9 @@ export default function Index() {
       }
     });
 
+    navigation.setOptions({
+      title: 'Card List',
+    });
     // deleteCardById(2, (details) => {
     //   if (details) {
     //     setCardDetails(details);

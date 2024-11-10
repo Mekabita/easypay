@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Button,
@@ -7,17 +7,27 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
+    Alert,
+  
 } from 'react-native';
 import { CreditCardInput } from 'react-native-credit-card-input';
 import { saveCardDetails } from '../db';
-import { useRouter } from 'expo-router';
+import { useRouter, useNavigation } from 'expo-router';
 import { AppConstants } from '@/constants/AppConstants';
 
 export default function AddCardDetails() {
   const [cardInfo, setCardInfo] = useState(null);
   const [isCardValid, setIsCardValid] = useState(false);
   const router = useRouter();
+    const navigation = useNavigation();
+    
+    useEffect(() => {
+
+
+    navigation.setOptions({
+      title: 'Add Card Details',
+    });
+  }, []);
 
   // Handle card details update
   const handleCardDetails = (formData) => {

@@ -15,6 +15,7 @@ import {
   BackHandler,
   Platform,
   Alert,
+  AppState,
 } from 'react-native';
 import Cards from '../(linkCards)/Cards';
 import CryptoCard from '../(linkCrypto)/CryptoCard';
@@ -46,7 +47,6 @@ export default function Index() {
 
   useEffect(() => {
     navigate.setOptions({ headerShown: false });
-
   }, []);
 
   const openModal = () => {
@@ -121,6 +121,26 @@ export default function Index() {
   };
 
   useEffect(() => {
+    const handleAppStateChange = async (nextAppState) => {
+      if (nextAppState === 'background') {
+        try {
+          await AsyncStorage.clear();
+          console.log('AsyncStorage cleared');
+        } catch (error) {
+          console.error('Failed to clear AsyncStorage:', error);
+        }
+      }
+    };
+
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange
+    );
+
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
     const getState = async () => {
       const isAuthenticated = await AsyncStorage.getItem('@isAuthenticated');
       if (!isAuthenticated) {
@@ -135,7 +155,6 @@ export default function Index() {
     setModalVisible(false);
     translateY.setValue(0); // reset translateY
   };
-
 
   const onGestureEvent = Animated.event(
     [{ nativeEvent: { translationY: translateY } }],
@@ -156,15 +175,14 @@ export default function Index() {
   };
 
   const handleCardPayPress = () => {
-    closeModal()
+    closeModal();
     router.push(`/cardDetails/3`);
   };
 
-    const handleCryptoPayPress = () => {
-    closeModal()
+  const handleCryptoPayPress = () => {
+    closeModal();
     router.push(`/cryptoDetails/3`);
   };
-
 
   return isLocked ? (
     <View
@@ -180,7 +198,6 @@ export default function Index() {
       </Text>
     </View>
   ) : (
-
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
         <Header />
@@ -263,10 +280,7 @@ export default function Index() {
         </TouchableWithoutFeedback>
         <View style={modal.bottomSheet}>
           <Text style={modal.sheetTitle}>Payment Methods</Text>
-          <TouchableOpacity
-            style={modal.option}
-            onPress={handleCryptoPayPress}
-          >
+          <TouchableOpacity style={modal.option} onPress={handleCryptoPayPress}>
             <Text style={modal.optionText}>Crypto Wallet</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -274,8 +288,8 @@ export default function Index() {
             onPress={() => alert('Selected PayPal')}
           >
             <TouchableOpacity onPress={handleCardPayPress}>
-      <Text style={modal.optionText}>Linked Cards</Text>
-    </TouchableOpacity>
+              <Text style={modal.optionText}>Linked Cards</Text>
+            </TouchableOpacity>
             {/* <Text style={modal.optionText}>Linked Cards</Text> */}
           </TouchableOpacity>
           {/* <TouchableOpacity

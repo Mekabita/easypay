@@ -8,7 +8,6 @@ export default function ViewCard() {
   const [cardDetails, setCardDetails] = useState([]);
   const router = useRouter();
 
-
   const maskCardNumber = (cardNumber) => {
     // Show only the last 4 digits
     const lastFourDigits = cardNumber.slice(-4);
@@ -23,7 +22,6 @@ export default function ViewCard() {
         setCardDetails(details);
       }
     });
-
   }, []);
 
   const handleCardPress = (card) => {
@@ -33,13 +31,13 @@ export default function ViewCard() {
   return cardDetails.map((card, index) => (
     <View key={index} style={styles.cardContainer}>
       <TouchableOpacity
-              key={index}
-              style={styles.cardContainer}
-              onPress={() => handleCardPress(card)}
-            >
-              <Text style={styles.cardNumber}>{card.cardNumber}</Text>
-              <Text style={styles.cardHolder}>{card.cardHolderName}</Text>
-              <Text style={styles.cardExpiry}>Expiry: {card.expiryDate}</Text>
+        key={index}
+        style={styles.cardContainer}
+        onPress={() => handleCardPress(card)}
+      >
+        <Text style={styles.cardNumber}>{maskCardNumber(card.cardNumber)}</Text>
+        <Text style={styles.cardHolder}>{card.cardHolderName}</Text>
+        <Text style={styles.cardExpiry}>Expiry: {card.expiryDate}</Text>
       </TouchableOpacity>
     </View>
   ));

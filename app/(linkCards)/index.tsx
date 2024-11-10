@@ -45,6 +45,13 @@ export default function Index() {
     router.push(`/cardDetails/${card.id}`);
   };
 
+  const maskCardNumber = (cardNumber) => {
+    // Show only the last 4 digits
+    const lastFourDigits = cardNumber.slice(-4);
+    const maskedSection = cardNumber.slice(0, -4).replace(/\d/g, '*');
+    return maskedSection + lastFourDigits;
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Welcome to Your Wallet</Text>
@@ -56,7 +63,9 @@ export default function Index() {
               style={styles.cardContainer}
               onPress={() => handleCardPress(card)}
             >
-              <Text style={styles.cardNumber}>{card.cardNumber}</Text>
+              <Text style={styles.cardNumber}>
+                {maskCardNumber(card.cardNumber)}
+              </Text>
               <Text style={styles.cardHolder}>{card.cardHolderName}</Text>
               <Text style={styles.cardExpiry}>Expiry: {card.expiryDate}</Text>
             </TouchableOpacity>

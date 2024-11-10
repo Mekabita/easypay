@@ -3,21 +3,42 @@ import { Text, View, StyleSheet, Button, ScrollView } from 'react-native';
 import { getCards, getCardDetailsById } from '../../db';
 import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
 
-
 export default function ViewCard() {
   const [cardDetails, setCardDetails] = useState([]);
   const userId = 'user-123';
   const router = useRouter();
   const { id } = useLocalSearchParams(); // Retrieve the card ID from the route params
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
   // Static transactions array for demonstration
   const transactions = [
-    { id: 1, date: '2024-11-01', description: 'Bali Restaurant', amount: '-thb32.50' },
-    { id: 2, date: '2024-11-03', description: 'Hyderbaad Biryani', amount: '-Rs120.00' },
-    { id: 3, date: '2024-11-05', description: 'Himalayan Java', amount: '-Rs5.75' },
+    {
+      id: 1,
+      date: '2024-11-01',
+      description: 'Bali Restaurant',
+      amount: '-thb32.50',
+    },
+    {
+      id: 2,
+      date: '2024-11-03',
+      description: 'Hyderbaad Biryani',
+      amount: '-Rs120.00',
+    },
+    {
+      id: 3,
+      date: '2024-11-05',
+      description: 'Himalayan Java',
+      amount: '-Rs5.75',
+    },
     { id: 4, date: '2024-11-07', description: 'Wow Momo', amount: '-Rs40.00' },
   ];
+
+  const maskCardNumber = (cardNumber) => {
+    // Show only the last 4 digits
+    const lastFourDigits = cardNumber.slice(-4);
+    const maskedSection = cardNumber.slice(0, -4).replace(/\d/g, '*');
+    return maskedSection + lastFourDigits;
+  };
 
   useEffect(() => {
     // Fetch all card details for the current user
@@ -41,28 +62,31 @@ export default function ViewCard() {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-    <View style={styles.container}>
-      <View style={styles.cardContainer}>
-        <Text style={styles.cardNumber}>{cardDetails.cardNumber}</Text>
-        <Text style={styles.cardHolder}>{cardDetails.cardHolderName}</Text>
-        <Text style={styles.cardExpiry}>Expiry: {cardDetails.expiryDate}</Text>
-      </View>
-
-      
-      <Text style={styles.transactionsHeading}>Transactions</Text>
-      {transactions.map((transaction) => (
-        <View key={transaction.id} style={styles.transactionContainer}>
-          <Text style={styles.transactionDate}>{transaction.date}</Text>
-          <Text style={styles.transactionDescription}>{transaction.description}</Text>
-          <Text style={styles.transactionAmount}>{transaction.amount}</Text>
+      <View style={styles.container}>
+        <View style={styles.cardContainer}>
+          <Text style={styles.cardNumber}>
+            {maskCardNumber(cardDetails.cardNumber)}
+          </Text>
+          <Text style={styles.cardHolder}>{cardDetails.cardHolderName}</Text>
+          <Text style={styles.cardExpiry}>
+            Expiry: {cardDetails.expiryDate}
+          </Text>
         </View>
-      ))}
 
-      <Button title="Back to Home" onPress={() => router.push('/(home)')} />
-    </View>
+        <Text style={styles.transactionsHeading}>Transactions</Text>
+        {transactions.map((transaction) => (
+          <View key={transaction.id} style={styles.transactionContainer}>
+            <Text style={styles.transactionDate}>{transaction.date}</Text>
+            <Text style={styles.transactionDescription}>
+              {transaction.description}
+            </Text>
+            <Text style={styles.transactionAmount}>{transaction.amount}</Text>
+          </View>
+        ))}
+
+        <Button title="Back to Home" onPress={() => router.push('/(home)')} />
+      </View>
     </ScrollView>
-
-    
   );
 }
 
@@ -115,7 +139,7 @@ const styles = StyleSheet.create({
     color: '#ccc',
     alignSelf: 'flex-end',
   },
-    transactionsHeading: {
+  transactionsHeading: {
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 20,

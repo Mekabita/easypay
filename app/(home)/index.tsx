@@ -20,6 +20,7 @@ import Cards from '../(linkCards)/Cards';
 import CryptoCard from '../(linkCrypto)/CryptoCard';
 import Transactions from '../Transactions/Transactions';
 import * as LocalAuthentication from 'expo-local-authentication';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { LogBox } from 'react-native';
 import Header from './Header';
@@ -102,6 +103,7 @@ export default function Index() {
 
       if (result.success) {
         console.log('Authentication Successful', 'You are authenticated!');
+        await AsyncStorage.setItem('@isAuthenticated', 'true');
       } else if (result.error === 'user_cancel') {
         console.log('here');
         handleCancel();
@@ -118,7 +120,14 @@ export default function Index() {
   };
 
   useEffect(() => {
-    authenticate();
+    const getState = async () => {
+      const isAuthenticated = await AsyncStorage.getItem('@isAuthenticated');
+      if (!isAuthenticated) {
+        authenticate();
+      }
+    };
+
+    getState();
   }, []);
 
   const closeModal = () => {

@@ -84,8 +84,7 @@ export default function TransactionList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 30,
-    backgroundColor: '#f5f5f5',
+    marginTop: 20,
     padding: 20,
     width: '100%',
   },
@@ -99,7 +98,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 15,
     paddingHorizontal: 10,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f5f5f5',
     borderRadius: 8,
     marginBottom: 10,
     shadowColor: '#000',

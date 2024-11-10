@@ -30,7 +30,7 @@ export default function Index() {
     navigation.setOptions({
       title: 'Card List',
     });
-    // deleteCardById(2, (details) => {
+    // deleteCardById(5, (details) => {
     //   if (details) {
     //     setCardDetails(details);
     //   }
@@ -73,7 +73,7 @@ export default function Index() {
         </ScrollView>
       ) : (
         <Text style={styles.noCardText}>
-          No card details found for this user.
+          No card details found.
         </Text>
       )}
 

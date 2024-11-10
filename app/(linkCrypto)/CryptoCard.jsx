@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useAccount, useBalance } from 'wagmi';
 
-// const API_KEY = process.env.EXPO_PUBLIC_COINMARKETCAP_API_KEY;
-const API_KEY = 'a3207dd8-1b70-490a-8f8e-bc1f8e7be6bd';
+const API_KEY = process.env.EXPO_PUBLIC_COINMARKETCAP_API_KEY;
 
 export default function CryptoAccountCard() {
   const { walletInfo } = useWalletInfo();
@@ -26,6 +25,8 @@ export default function CryptoAccountCard() {
           }
         );
         const data = await response.json();
+
+        // console.log(response)
 
         // Find the cryptocurrency data by symbol
         const cryptoData = data.data.find(

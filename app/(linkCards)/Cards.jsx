@@ -1,7 +1,7 @@
 import { AppConstants } from '@/constants/AppConstants';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { getCards } from '../db';
+import { getCards, deleteCardById } from '../db';
 import { useRouter } from 'expo-router';
 
 export default function ViewCard() {
@@ -22,9 +22,13 @@ export default function ViewCard() {
         setCardDetails(details);
       }
     });
+
+
+    
   }, []);
 
   const handleCardPress = (card) => {
+    console.log(card.id)
     router.push(`/cardDetails/${card.id}`);
   };
 

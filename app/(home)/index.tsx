@@ -11,6 +11,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Animated,
+  SafeAreaView,
 } from 'react-native';
 import Cards from '../(linkCards)/Cards';
 import CryptoCard from '../(linkCrypto)/CryptoCard';
@@ -18,6 +19,7 @@ import Transactions from '../Transactions/Transactions';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 
 import { LogBox } from 'react-native';
+import Header from './Header';
 
 // Ignore all warnings
 LogBox.ignoreAllLogs(true);
@@ -35,6 +37,7 @@ export default function Index() {
 
   useEffect(() => {
     navigate.setOptions({ headerShown: false });
+
   }, []);
 
   const openModal = () => {
@@ -64,14 +67,23 @@ export default function Index() {
     }
   };
 
-  const handleCardPress = () => {
+  const handleCardPayPress = () => {
     closeModal()
     router.push(`/cardDetails/3`);
   };
 
+    const handleCryptoPayPress = () => {
+    closeModal()
+    router.push(`/cryptoDetails/3`);
+  };
+
+
+
   return (
-    <>
+    <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
+        <Header />
+
         <View
           style={{
             ...styles.container,
@@ -81,11 +93,13 @@ export default function Index() {
         >
           <Text
             style={{
-              marginTop: 80,
+              marginTop: 20,
               fontSize: 20,
               fontWeight: 'bold',
               marginBottom: 18,
               textAlign: 'left',
+              alignSelf: 'flex-start',
+              marginLeft: 20,
             }}
           >
             Linked Crypto Wallets
@@ -99,6 +113,8 @@ export default function Index() {
               fontWeight: 'bold',
               marginBottom: 20,
               textAlign: 'left',
+              alignSelf: 'flex-start',
+              marginLeft: 20,
             }}
           >
             Linked Cards
@@ -148,7 +164,7 @@ export default function Index() {
           <Text style={modal.sheetTitle}>Payment Methods</Text>
           <TouchableOpacity
             style={modal.option}
-            onPress={() => alert('Selected Credit Card')}
+            onPress={handleCryptoPayPress}
           >
             <Text style={modal.optionText}>Crypto Wallet</Text>
           </TouchableOpacity>
@@ -156,7 +172,7 @@ export default function Index() {
             style={modal.option}
             onPress={() => alert('Selected PayPal')}
           >
-            <TouchableOpacity onPress={handleCardPress}>
+            <TouchableOpacity onPress={handleCardPayPress}>
       <Text style={modal.optionText}>Linked Cards</Text>
     </TouchableOpacity>
             {/* <Text style={modal.optionText}>Linked Cards</Text> */}
@@ -175,11 +191,15 @@ export default function Index() {
           </TouchableOpacity> */}
         </View>
       </Modal>
-    </>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
     flex: 1,
     paddingBottom: 100,
